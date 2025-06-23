@@ -57,11 +57,11 @@ func init() {
 }
 
 func main() {
-	logger.Info("msg", "Starting network_exporter", "version", version)
+	logger.Info("Starting network_exporter", "version", version)
 
-	logger.Info("msg", "Loading config")
+	logger.Info("Loading config")
 	if err := sc.ReloadConfig(logger, *configFile); err != nil {
-		logger.Error("msg", "Loading config", "err", err)
+		logger.Error("Loading config", "err", err)
 		os.Exit(1)
 	}
 
@@ -93,9 +93,9 @@ func startConfigRefresh() {
 	}
 
 	for range time.NewTicker(interval).C {
-		logger.Info("msg", "ReLoading config")
+		logger.Info("ReLoading config")
 		if err := sc.ReloadConfig(logger, *configFile); err != nil {
-			logger.Error("msg", "Reloading config skipped", "err", err)
+			logger.Error("Reloading config skipped", "err", err)
 			continue
 		} else {
 			monitorPING.DelTargets()
@@ -131,7 +131,7 @@ func startServer() {
 	})
 
 	if *enableProfileing {
-		logger.Info("msg", "Profiling enabled")
+		logger.Info("Profiling enabled")
 		mux.Handle("/debug/vars", http.HandlerFunc(expVars))
 		mux.HandleFunc("/debug/fgprof", fgprof.Handler().(http.HandlerFunc))
 		mux.HandleFunc("/debug/pprof/", pprof.Index)
@@ -145,8 +145,8 @@ func startServer() {
 		Handler: mux,
 	}
 
-	logger.Info("msg", "Starting network_exporter", "version", version)
-	logger.Info("msg", fmt.Sprintf("Listening for %s on %s", webMetricsPath, *WebListenAddresses))
+	logger.Info("Starting network_exporter", "version", version)
+	logger.Info(fmt.Sprintf("Listening for %s on %s", webMetricsPath, *WebListenAddresses))
 
 	serverFlags := web.FlagConfig{
 		WebConfigFile:      WebConfigFile,
@@ -154,17 +154,17 @@ func startServer() {
 		WebListenAddresses: WebListenAddresses,
 	}
 	if err := web.ListenAndServe(server, &serverFlags, logger); err != nil {
-		logger.Error("msg", "Could not start HTTP server", "err", err)
+		logger.Error("Could not start HTTP server", "err", err)
 	}
 }
 
 func getResolver() *config.Resolver {
 	if sc.Cfg.Conf.Nameserver == "" {
-		logger.Info("msg", "Configured default DNS resolver")
+		logger.Info("Configured default DNS resolver")
 		return &config.Resolver{Resolver: net.DefaultResolver, Timeout: sc.Cfg.Conf.NameserverTimeout.Duration()}
 	}
 
-	logger.Info("msg", "Configured custom DNS resolver")
+	logger.Info("Configured custom DNS resolver")
 	dialer := func(ctx context.Context, network, address string) (net.Conn, error) {
 		d := net.Dialer{Timeout: sc.Cfg.Conf.NameserverTimeout.Duration()}
 		return d.DialContext(ctx, "udp", sc.Cfg.Conf.Nameserver)

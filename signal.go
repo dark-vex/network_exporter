@@ -21,10 +21,10 @@ func reloadSignal() {
 		for {
 			select {
 			case <-hup:
-				logger.Debug("msg", "Signal: HUP")
-				logger.Info("msg", "ReLoading config")
+				logger.Debug("Signal: HUP")
+				logger.Info("ReLoading config")
 				if err := sc.ReloadConfig(logger, *configFile); err != nil {
-					logger.Error("msg", "Reloading config skipped", "err", err)
+					logger.Error("Reloading config skipped", "err", err)
 					continue
 				} else {
 					monitorPING.DelTargets()
@@ -40,7 +40,7 @@ func reloadSignal() {
 					monitorHTTPGet.AddTargets()
 				}
 			case <-susr:
-				logger.Debug("msg", "Signal: USR1")
+				logger.Debug("Signal: USR1")
 				fmt.Printf("PING: %+v\n", monitorPING)
 				fmt.Printf("MTR: %+v\n", monitorMTR)
 				fmt.Printf("TCP: %+v\n", monitorTCP)
