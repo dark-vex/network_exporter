@@ -1,5 +1,5 @@
 BUILDX_VER=v0.23.0
-IMAGE_NAME=syepes/network_exporter
+IMAGE_NAME=dark-vex/network_exporter
 VERSION?=latest
 
 install:
